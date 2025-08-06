@@ -33,7 +33,7 @@ class ChangePassword extends BaseEditProfile
 
     public function getTitle(): string|Htmlable
     {
-        return __('password-change::password-change.title');
+        return __('fb-passwd::fb-passwd.title');
     }
 
     public function hasLogo(): bool
@@ -56,7 +56,7 @@ class ChangePassword extends BaseEditProfile
     protected function getSaveFormAction(): Action
     {
         return Action::make('save')
-            ->label(fn (): string => __('password-change::password-change.action'))
+            ->label(fn (): string => __('fb-passwd::fb-passwd.action'))
             ->submit('save')
             ->keyBindings(['mod+s']);
     }
@@ -95,7 +95,7 @@ class ChangePassword extends BaseEditProfile
                 Grid::make(1)
                     ->schema([
                         TextInput::make('current_password')
-                            ->label(__('password-change::password-change.current_password'))
+                            ->label(__('fb-passwd::fb-passwd.current_password'))
                             ->required()
                             ->password()
                             ->revealable(Filament::arePasswordsRevealable())
@@ -177,6 +177,6 @@ class ChangePassword extends BaseEditProfile
     {
         return FilamentNotification::make()
             ->success()
-            ->title(__('password-change::password-change.notification'));
+            ->title(__('fb-passwd::fb-passwd.notification'));
     }
 }
