@@ -2,11 +2,12 @@
 
 namespace Mortezamasumi\FbPasswd\Pages;
 
+use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use Filament\Actions\Action;
 use Filament\Auth\Pages\EditProfile as BaseEditProfile;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\TextInput;
-use Filament\Notifications\Notification as FilamentNotification;
+use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\Width;
@@ -129,6 +130,14 @@ class ChangePassword extends BaseEditProfile
     public function save(): void
     {
         try {
+            $this->rateLimit(2);
+        } catch (TooManyRequestsException $exception) {
+            $this->getRateLimitedNotification($exception)?->send();
+
+            return;
+        }
+
+        try {
             $this->beginDatabaseTransaction();
 
             $this->callHook('beforeValidate');
@@ -173,9 +182,23 @@ class ChangePassword extends BaseEditProfile
         $this->redirect(Filament::getCurrentPanel()->getLoginUrl(), navigate: FilamentView::hasSpaMode() && is_app_url(Filament::getCurrentPanel()->getLoginUrl()));
     }
 
-    protected function getSavedNotification(): ?FilamentNotification
+    protected function getRateLimitedNotification(TooManyRequestsException $exception): ?Notification
     {
-        return FilamentNotification::make()
+        return Notification::make()
+            ->title(__('filament-panels::auth/pages/password-reset/reset-password.notifications.throttled.title', [
+                'seconds' => $exception->secondsUntilAvailable,
+                'minutes' => $exception->minutesUntilAvailable,
+            ]))
+            ->body(array_key_exists('body', __('filament-panels::auth/pages/password-reset/reset-password.notifications.throttled') ?: []) ? __('filament-panels::auth/pages/password-reset/reset-password.notifications.throttled.body', [
+                'seconds' => $exception->secondsUntilAvailable,
+                'minutes' => $exception->minutesUntilAvailable,
+            ]) : null)
+            ->danger();
+    }
+
+    protected function getSavedNotification(): ?Notification
+    {
+        return Notification::make()
             ->success()
             ->title(__('fb-passwd::fb-passwd.notification'));
     }
