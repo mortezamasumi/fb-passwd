@@ -12,7 +12,7 @@ class ForcePasswordChangeMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && (Auth::user()->force_change_password ?? false)) {
+        if (Auth::check() && Auth::user()->value('force_change_password')) {
             return redirect(ChangePassword::getRoutePath(Filament::getCurrentPanel()));
         }
 
