@@ -3,6 +3,7 @@
 namespace Mortezamasumi\FbPasswd;
 
 use Livewire\Features\SupportTesting\Testable;
+use Mortezamasumi\FbEssentials\Facades\FbEssentials;
 use Mortezamasumi\FbPasswd\Pages\ChangePassword;
 use Mortezamasumi\FbPasswd\Testing\TestsFbPasswd;
 use Spatie\LaravelPackageTools\Package;
@@ -21,10 +22,7 @@ class FbPasswdServiceProvider extends PackageServiceProvider
 
     public function packageBooted(): void
     {
-        config(['filament-shield.pages.exclude' => [
-            ...config('filament-shield.pages.exclude') ?? [],
-            ChangePassword::class,
-        ]]);
+        FbEssentials::filamentShieldExcludePage(ChangePassword::class);
 
         Testable::mixin(new TestsFbPasswd);
     }
