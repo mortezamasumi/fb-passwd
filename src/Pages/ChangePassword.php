@@ -179,7 +179,7 @@ class ChangePassword extends BaseEditProfile
             Session::regenerateToken();
         }
 
-        $this->redirect(Filament::getCurrentPanel()->getLoginUrl(), navigate: FilamentView::hasSpaMode() && is_app_url(Filament::getCurrentPanel()->getLoginUrl()));
+        $this->redirect(Filament::getLoginUrl(), navigate: FilamentView::hasSpaMode() && is_app_url(Filament::getLoginUrl()));
     }
 
     protected function getRateLimitedNotification(TooManyRequestsException $exception): ?Notification
