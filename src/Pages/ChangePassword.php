@@ -31,6 +31,7 @@ class ChangePassword extends BaseEditProfile
 {
     protected Width|string|null $maxWidth = 'md';
     protected static bool $shouldRegisterNavigation = false;
+    protected static ?string $slug = 'change-password';
 
     public function getTitle(): string|Htmlable
     {
@@ -46,12 +47,7 @@ class ChangePassword extends BaseEditProfile
     {
         Route::get(static::getRoutePath($panel), static::class)
             ->withoutMiddleware(ForcePasswordChangeMiddleware::class)
-            ->name('auth.change-password');
-    }
-
-    public static function getRoutePath(Panel $panel): string
-    {
-        return '/change-password';
+            ->name(static::getRelativeRouteName($panel));
     }
 
     protected function getSaveFormAction(): Action

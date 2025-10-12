@@ -4,6 +4,7 @@ namespace Mortezamasumi\FbPasswd;
 
 use Filament\Actions\Action;
 use Filament\Contracts\Plugin;
+use Filament\Support\Icons\Heroicon;
 use Filament\Panel;
 use Mortezamasumi\FbPasswd\Middleware\ForcePasswordChangeMiddleware;
 use Mortezamasumi\FbPasswd\Pages\ChangePassword;
@@ -25,8 +26,8 @@ class FbPasswdPlugin implements Plugin
             ->userMenuItems([
                 Action::make('change-password')
                     ->label(fn (): string => __('fb-passwd::fb-passwd.user_menu'))
-                    ->url(fn (): string => '/change-password')
-                    ->icon('heroicon-o-key'),
+                    ->url(ChangePassword::getRoutePath($panel))
+                    ->icon(Heroicon::OutlinedKey),
             ]);
     }
 

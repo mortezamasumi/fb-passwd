@@ -1,35 +1,34 @@
 <?php
 
-use Filament\Facades\Filament;
 use Filament\Livewire\SimpleUserMenu;
+use Filament\Pages\Dashboard;
 use Mortezamasumi\FbPasswd\Pages\ChangePassword;
 use Mortezamasumi\FbPasswd\Tests\Services\User;
 
-it('can be rendered dashboard by an authenticated user with no force to change password', function () {
+it('can render dashboard without force to change password', function () {
     $this
-        ->actingAs(User::factory()->create(['force_change_password' => false]))
-        ->get(Filament::getUrl())
-        ->assertSee('Dashboard')
+        ->actingAs(User::factory()->create())
+        ->get(Dashboard::getUrl())
         ->assertSuccessful();
 });
 
-it('can be redirect to change password page if forced to change password', function () {
+it('can redirect to change password page if forced to change password', function () {
     $this
-        ->actingAs(User::factory()->create(['force_change_password' => true]))
-        ->get(Filament::getUrl())
+        ->actingAs(User::factory()->forceChangePassword()->create())
+        ->get(Dashboard::getUrl())
         ->assertRedirect('/change-password');
 });
 
 it('can see change password in user menu', function () {
     $this
-        ->actingAs(User::factory()->create(['force_change_password' => false]))
+        ->actingAs(User::factory()->create())
         ->Livewire(SimpleUserMenu::class)
         ->assertSee('Change password');
 });
 
 it('can change the password and set flag force_change_password to false', function () {
     $this
-        ->actingAs($user = User::factory()->create(['force_change_password' => true]))
+        ->actingAs($user = User::factory()->forceChangePassword()->create())
         ->livewire(ChangePassword::class)
         ->fillForm([
             'current_password' => 'password',
