@@ -6,13 +6,14 @@ use Filament\Facades\Filament;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
 use Mortezamasumi\FbPasswd\FbPasswdPlugin;
 use Mortezamasumi\FbPasswd\FbPasswdServiceProvider;
 
 class TestCase extends \Orchestra\Testbench\TestCase
 {
-    use \Illuminate\Foundation\Testing\RefreshDatabase;
+    use RefreshDatabase;
 
     protected function defineEnvironment($app)
     {
