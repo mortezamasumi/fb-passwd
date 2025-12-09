@@ -6,6 +6,7 @@ use Mortezamasumi\FbPasswd\Pages\ChangePassword;
 use Mortezamasumi\FbPasswd\Tests\Services\User;
 
 it('can render dashboard without force to change password', function () {
+    /** @var Pest $this */
     $this
         ->actingAs(User::factory()->create())
         ->get(Dashboard::getUrl())
@@ -13,6 +14,7 @@ it('can render dashboard without force to change password', function () {
 });
 
 it('can redirect to change password page if forced to change password', function () {
+    /** @var Pest $this */
     $this
         ->actingAs(User::factory()->forceChangePassword()->create())
         ->get(Dashboard::getUrl())
@@ -20,6 +22,7 @@ it('can redirect to change password page if forced to change password', function
 });
 
 it('can see change password in user menu', function () {
+    /** @var Pest $this */
     $this
         ->actingAs(User::factory()->create())
         ->Livewire(SimpleUserMenu::class)
@@ -27,6 +30,7 @@ it('can see change password in user menu', function () {
 });
 
 it('can change the password and set flag force_change_password to false', function () {
+    /** @var Pest $this */
     $this
         ->actingAs($user = User::factory()->forceChangePassword()->create())
         ->livewire(ChangePassword::class)
