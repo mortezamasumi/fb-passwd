@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Js;
 use Illuminate\Validation\Rules\Password;
 use Mortezamasumi\FbPasswd\Middleware\ForcePasswordChangeMiddleware;
+use Filament\Pages\PageConfiguration;
 use Throwable;
 
 use function Filament\Support\is_app_url;
@@ -43,7 +44,7 @@ class ChangePassword extends BaseEditProfile
         return true;
     }
 
-    public static function routes(Panel $panel): void
+    public static function routes(Panel $panel, ?PageConfiguration $configuration = null): void
     {
         Route::get(static::getRoutePath($panel), static::class)
             ->withoutMiddleware(ForcePasswordChangeMiddleware::class)
