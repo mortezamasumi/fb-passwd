@@ -26,8 +26,6 @@ use Mortezamasumi\FbPasswd\Middleware\ForcePasswordChangeMiddleware;
 use Filament\Pages\PageConfiguration;
 use Throwable;
 
-// just comment
-
 use function Filament\Support\is_app_url;
 
 class ChangePassword extends BaseEditProfile
