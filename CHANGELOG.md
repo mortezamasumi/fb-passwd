@@ -2,6 +2,6 @@
 
 All notable changes to `fb-passwd` will be documented in this file.
 
-## 1.0.0 - 202X-XX-XX
+## 5.0.0 - 2026-07-09
 
-- initial release
+- upgrade to Filament 5

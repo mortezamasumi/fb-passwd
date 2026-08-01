@@ -4,8 +4,8 @@ namespace Mortezamasumi\FbPasswd;
 
 use Filament\Actions\Action;
 use Filament\Contracts\Plugin;
-use Filament\Support\Icons\Heroicon;
 use Filament\Panel;
+use Filament\Support\Icons\Heroicon;
 use Mortezamasumi\FbPasswd\Middleware\ForcePasswordChangeMiddleware;
 use Mortezamasumi\FbPasswd\Pages\ChangePassword;
 

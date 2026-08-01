@@ -8,12 +8,13 @@ use Filament\Auth\Pages\EditProfile as BaseEditProfile;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
+use Filament\Pages\PageConfiguration;
+use Filament\Panel;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\Width;
 use Filament\Support\Exceptions\Halt;
 use Filament\Support\Facades\FilamentView;
-use Filament\Panel;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +24,6 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Js;
 use Illuminate\Validation\Rules\Password;
 use Mortezamasumi\FbPasswd\Middleware\ForcePasswordChangeMiddleware;
-use Filament\Pages\PageConfiguration;
 use Throwable;
 
 use function Filament\Support\is_app_url;
@@ -31,7 +31,9 @@ use function Filament\Support\is_app_url;
 class ChangePassword extends BaseEditProfile
 {
     protected Width|string|null $maxWidth = 'md';
+
     protected static bool $shouldRegisterNavigation = false;
+
     protected static ?string $slug = 'change-password';
 
     public function getTitle(): string|Htmlable
@@ -61,7 +63,7 @@ class ChangePassword extends BaseEditProfile
 
     protected function getCancelFormAction(): Action
     {
-        if (! Auth::user()->force_change_password) {
+        if (! Auth::user()?->getAttribute('force_change_password')) {
             return Action::make('back')
                 ->label(__('filament-panels::auth/pages/edit-profile.actions.cancel.label'))
                 ->alpineClickHandler('document.referrer ? window.history.back() : (window.location.href = '.Js::from(filament()->getUrl()).')')
@@ -73,7 +75,7 @@ class ChangePassword extends BaseEditProfile
             ->action(function () {
                 Auth::logout();
 
-                redirect(Filament::getCurrentPanel()->getPath());
+                redirect(Filament::getCurrentOrDefaultPanel()?->getPath() ?? Filament::getUrl());
             })
             ->color('gray');
     }
@@ -81,7 +83,7 @@ class ChangePassword extends BaseEditProfile
     protected function getLayoutData(): array
     {
         return [
-            'hasTopbar' => ! Auth::user()->force_change_password && $this->hasTopBar(),
+            'hasTopbar' => ! Auth::user()?->getAttribute('force_change_password') && $this->hasTopBar(),
             'maxWidth' => $this->getMaxWidth(),
         ];
     }
@@ -176,7 +178,9 @@ class ChangePassword extends BaseEditProfile
             Session::regenerateToken();
         }
 
-        $this->redirect(Filament::getLoginUrl(), navigate: FilamentView::hasSpaMode() && is_app_url(Filament::getLoginUrl()));
+        $loginUrl = Filament::getLoginUrl() ?? Filament::getDefaultPanel()->getLoginUrl() ?? '/login';
+
+        $this->redirect($loginUrl, navigate: FilamentView::hasSpaMode() && is_app_url($loginUrl));
     }
 
     protected function getRateLimitedNotification(TooManyRequestsException $exception): ?Notification
@@ -186,10 +190,10 @@ class ChangePassword extends BaseEditProfile
                 'seconds' => $exception->secondsUntilAvailable,
                 'minutes' => $exception->minutesUntilAvailable,
             ]))
-            ->body(array_key_exists('body', __('filament-panels::auth/pages/password-reset/reset-password.notifications.throttled') ?: []) ? __('filament-panels::auth/pages/password-reset/reset-password.notifications.throttled.body', [
+            ->body(__('filament-panels::auth/pages/password-reset/reset-password.notifications.throttled.body', [
                 'seconds' => $exception->secondsUntilAvailable,
                 'minutes' => $exception->minutesUntilAvailable,
-            ]) : null)
+            ]))
             ->danger();
     }
 
